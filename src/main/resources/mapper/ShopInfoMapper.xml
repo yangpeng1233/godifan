@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dao.IShopInfo" >
+  <resultMap id="BaseResultMap" type="com.entity.ShopInfo" >
+    <id column="shopId" property="shopid" jdbcType="INTEGER" />
+    <result column="shopName" property="shopname" jdbcType="VARCHAR" />
+    <result column="shopCity" property="shopcity" jdbcType="VARCHAR" />
+    <result column="shopAddress" property="shopaddress" jdbcType="VARCHAR" />
+    <result column="shopPhoneNum" property="shopphonenum" jdbcType="BIGINT" />
+    <result column="workTime" property="worktime" jdbcType="VARCHAR" />
+    <result column="bossName" property="bossname" jdbcType="VARCHAR" />
+    <result column="bossPhoneNum" property="bossphonenum" jdbcType="BIGINT" />
+     <!--<collection property="store" ofType="com.entity.ShopStore" column="shopId" javaType="java.util.List">
+      <id column="storeId" property="storeid" jdbcType="INTEGER" />
+      <result column="shop_Id" property="shopId" jdbcType="INTEGER" />
+      <result column="productid" property="productid" jdbcType="VARCHAR" />
+      <result column="storeNum" property="storenum" jdbcType="BIGINT" />
+      <result column="sales" property="sales" jdbcType="BIGINT" />
+    </collection>-->
+  </resultMap>
+  <sql id="Base_Column_List" >
+    shopId, shopName, shopCity, shopAddress, shopPhoneNum, workTime, bossName, bossPhoneNum
+  </sql>
+
+  <select id="selectAll" resultMap="BaseResultMap">
+
+    SELECT *
+     FROM shopinfo
+
+  </select>
+
+ <!-- <select id="selectLike" resultMap="BaseResultMap" parameterType="java.util.Map">
+     SELECT *
+     FROM shopinfo i
+     LEFT JOIN  shopstore s
+     ON s.`shop_Id` = i.`shopId`
+     <where>
+       <if test="sname !=null">
+         and shopName LIKE #{sname}
+       </if>
+     </where>
+   </select>
+
+   <select id="selectCount" resultType="java.lang.Integer" parameterType="java.util.Map">
+     SELECT COUNT(s.`shop_Id`)
+     FROM shopinfo i
+     LEFT JOIN  shopstore s
+     ON s.`shop_Id` = i.`shopId`
+     <where>
+       <if test="sname !=null">
+         and shopName LIKE #{sname}
+       </if>
+     </where>
+   </select>
+
+   <select id="selectPage" resultMap="BaseResultMap" parameterType="java.util.Map">
+     SELECT *
+     FROM shopinfo i
+     LEFT JOIN  shopstore s
+     ON s.`shop_Id` = i.`shopId`
+     <where>
+       <if test="sname !=null">
+         and shopName LIKE #{sname}
+       </if>
+     </where>
+     ORDER BY s.`shop_Id` DESC LIMIT #{start},#{pagesize}
+   </select>-->
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from shopinfo
+    where shopId = #{shopid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from shopinfo
+    where shopId = #{shopid,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.entity.ShopInfo" >
+    insert into shopinfo (shopId, shopName, shopCity, 
+      shopAddress, shopPhoneNum, workTime, 
+      bossName, bossPhoneNum)
+    values (#{shopid,jdbcType=INTEGER}, #{shopname,jdbcType=VARCHAR}, #{shopcity,jdbcType=VARCHAR}, 
+      #{shopaddress,jdbcType=VARCHAR}, #{shopphonenum,jdbcType=BIGINT}, #{worktime,jdbcType=VARCHAR}, 
+      #{bossname,jdbcType=VARCHAR}, #{bossphonenum,jdbcType=BIGINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.entity.ShopInfo" >
+    insert into shopinfo
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="shopid != null" >
+        shopId,
+      </if>
+      <if test="shopname != null" >
+        shopName,
+      </if>
+      <if test="shopcity != null" >
+        shopCity,
+      </if>
+      <if test="shopaddress != null" >
+        shopAddress,
+      </if>
+      <if test="shopphonenum != null" >
+        shopPhoneNum,
+      </if>
+      <if test="worktime != null" >
+        workTime,
+      </if>
+      <if test="bossname != null" >
+        bossName,
+      </if>
+      <if test="bossphonenum != null" >
+        bossPhoneNum,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="shopid != null" >
+        #{shopid,jdbcType=INTEGER},
+      </if>
+      <if test="shopname != null" >
+        #{shopname,jdbcType=VARCHAR},
+      </if>
+      <if test="shopcity != null" >
+        #{shopcity,jdbcType=VARCHAR},
+      </if>
+      <if test="shopaddress != null" >
+        #{shopaddress,jdbcType=VARCHAR},
+      </if>
+      <if test="shopphonenum != null" >
+        #{shopphonenum,jdbcType=BIGINT},
+      </if>
+      <if test="worktime != null" >
+        #{worktime,jdbcType=VARCHAR},
+      </if>
+      <if test="bossname != null" >
+        #{bossname,jdbcType=VARCHAR},
+      </if>
+      <if test="bossphonenum != null" >
+        #{bossphonenum,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.entity.ShopInfo" >
+    update shopinfo
+    <set >
+      <if test="shopname != null" >
+        shopName = #{shopname,jdbcType=VARCHAR},
+      </if>
+      <if test="shopcity != null" >
+        shopCity = #{shopcity,jdbcType=VARCHAR},
+      </if>
+      <if test="shopaddress != null" >
+        shopAddress = #{shopaddress,jdbcType=VARCHAR},
+      </if>
+      <if test="shopphonenum != null" >
+        shopPhoneNum = #{shopphonenum,jdbcType=BIGINT},
+      </if>
+      <if test="worktime != null" >
+        workTime = #{worktime,jdbcType=VARCHAR},
+      </if>
+      <if test="bossname != null" >
+        bossName = #{bossname,jdbcType=VARCHAR},
+      </if>
+      <if test="bossphonenum != null" >
+        bossPhoneNum = #{bossphonenum,jdbcType=BIGINT},
+      </if>
+    </set>
+    where shopId = #{shopid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.entity.ShopInfo" >
+    update shopinfo
+    set shopName = #{shopname,jdbcType=VARCHAR},
+      shopCity = #{shopcity,jdbcType=VARCHAR},
+      shopAddress = #{shopaddress,jdbcType=VARCHAR},
+      shopPhoneNum = #{shopphonenum,jdbcType=BIGINT},
+      workTime = #{worktime,jdbcType=VARCHAR},
+      bossName = #{bossname,jdbcType=VARCHAR},
+      bossPhoneNum = #{bossphonenum,jdbcType=BIGINT}
+    where shopId = #{shopid,jdbcType=INTEGER}
+  </update>
+</mapper>

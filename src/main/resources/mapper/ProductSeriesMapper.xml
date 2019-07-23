@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dao.IProductSeries" >
+  <resultMap id="BaseResultMap" type="com.entity.ProductSeries" >
+    <id column="seriesId" property="seriesid" jdbcType="INTEGER" />
+    <result column="seriesName" property="seriesname" jdbcType="VARCHAR" />
+    <result column="seriesImg" property="seriesimg" jdbcType="VARCHAR" />
+    <result column="kindId" property="kindid" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    seriesId, seriesName, seriesImg, kindId
+  </sql>
+
+  <select id="selectLike" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+    SELECT * FROM productSeries s
+    WHERE s.`kindId` = #{kindId};
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from productSeries
+    where seriesId = #{seriesid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from productSeries
+    where seriesId = #{seriesid,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.entity.ProductSeries" >
+    insert into productSeries (seriesId, seriesName, seriesImg, 
+      kindId)
+    values (#{seriesid,jdbcType=INTEGER}, #{seriesname,jdbcType=VARCHAR}, #{seriesimg,jdbcType=VARCHAR}, 
+      #{kindid,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.entity.ProductSeries" >
+    insert into productSeries
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="seriesid != null" >
+        seriesId,
+      </if>
+      <if test="seriesname != null" >
+        seriesName,
+      </if>
+      <if test="seriesimg != null" >
+        seriesImg,
+      </if>
+      <if test="kindid != null" >
+        kindId,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="seriesid != null" >
+        #{seriesid,jdbcType=INTEGER},
+      </if>
+      <if test="seriesname != null" >
+        #{seriesname,jdbcType=VARCHAR},
+      </if>
+      <if test="seriesimg != null" >
+        #{seriesimg,jdbcType=VARCHAR},
+      </if>
+      <if test="kindid != null" >
+        #{kindid,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.entity.ProductSeries" >
+    update productSeries
+    <set >
+      <if test="seriesname != null" >
+        seriesName = #{seriesname,jdbcType=VARCHAR},
+      </if>
+      <if test="seriesimg != null" >
+        seriesImg = #{seriesimg,jdbcType=VARCHAR},
+      </if>
+      <if test="kindid != null" >
+        kindId = #{kindid,jdbcType=INTEGER},
+      </if>
+    </set>
+    where seriesId = #{seriesid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.entity.ProductSeries" >
+    update productSeries
+    set seriesName = #{seriesname,jdbcType=VARCHAR},
+      seriesImg = #{seriesimg,jdbcType=VARCHAR},
+      kindId = #{kindid,jdbcType=INTEGER}
+    where seriesId = #{seriesid,jdbcType=INTEGER}
+  </update>
+</mapper>

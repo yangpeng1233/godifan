@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dao.IShopStore" >
+  <resultMap id="BaseResultMap" type="com.entity.ShopStore" >
+    <id column="storeId" property="storeid" jdbcType="INTEGER" />
+    <result column="shop_Id" property="shopId" jdbcType="INTEGER" />
+    <result column="productid" property="productid" jdbcType="VARCHAR" />
+    <result column="storeNum" property="storenum" jdbcType="BIGINT" />
+    <result column="sales" property="sales" jdbcType="BIGINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    storeId, shop_Id, productid, storeNum, sales
+  </sql>
+
+  <select id="selectAll" resultMap="BaseResultMap">
+    SELECT
+      *
+    FROM shopstore
+  </select>
+
+  <select id="selectLike" resultMap="BaseResultMap" parameterType="java.util.Map">
+    SELECT *
+    FROM shopstore
+    <where>
+      <if test="shopId != null">
+        AND shop_Id = #{shopId}
+      </if>
+      <if test="productid != null">
+        AND productid LIKE #{productid};
+      </if>
+    </where>
+  </select>
+
+  <select id="selectPage" resultMap="BaseResultMap" parameterType="java.util.Map">
+    SELECT *
+    FROM shopstore
+    <where>
+      <if test="shopId != null">
+        AND shop_Id = #{shopId}
+      </if>
+      <if test="productid != null">
+        AND productid LIKE #{productid};
+      </if>
+    </where>
+     ORDER BY storeId DESC LIMIT #{start},#{pagesize};
+  </select>
+
+  <select id="selectCount" resultType="java.lang.Integer" parameterType="java.util.Map">
+        SELECT COUNT(storeId)
+        FROM shopstore
+        <where>
+            <if test="shopId != null">
+             AND shop_Id = #{shopId}
+            </if>
+            <if test="productid != null">
+              AND productid LIKE #{productid};
+            </if>
+        </where>
+  </select>
+
+
+<select id="selectSales" resultMap="BaseResultMap">
+    SELECT productid, sales
+      FROM shopstore
+      GROUP BY productid ORDER BY sales DESC LIMIT 10;
+</select>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from shopstore
+    where storeId = #{storeid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from shopstore
+    where storeId = #{storeid,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.entity.ShopStore" >
+    insert into shopstore (storeId, shop_Id, productid, 
+      storeNum, sales)
+    values (#{storeid,jdbcType=INTEGER}, #{shopId,jdbcType=INTEGER}, #{productid,jdbcType=VARCHAR}, 
+      #{storenum,jdbcType=BIGINT}, #{sales,jdbcType=BIGINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.entity.ShopStore" >
+    insert into shopstore
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="storeid != null" >
+        storeId,
+      </if>
+      <if test="shopId != null" >
+        shop_Id,
+      </if>
+      <if test="productid != null" >
+        productid,
+      </if>
+      <if test="storenum != null" >
+        storeNum,
+      </if>
+      <if test="sales != null" >
+        sales,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="storeid != null" >
+        #{storeid,jdbcType=INTEGER},
+      </if>
+      <if test="shopId != null" >
+        #{shopId,jdbcType=INTEGER},
+      </if>
+      <if test="productid != null" >
+        #{productid,jdbcType=VARCHAR},
+      </if>
+      <if test="storenum != null" >
+        #{storenum,jdbcType=BIGINT},
+      </if>
+      <if test="sales != null" >
+        #{sales,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.entity.ShopStore" >
+    update shopstore
+    <set >
+      <if test="shopId != null" >
+        shop_Id = #{shopId,jdbcType=INTEGER},
+      </if>
+      <if test="productid != null" >
+        productid = #{productid,jdbcType=VARCHAR},
+      </if>
+      <if test="storenum != null" >
+        storeNum = #{storenum,jdbcType=BIGINT},
+      </if>
+      <if test="sales != null" >
+        sales = #{sales,jdbcType=BIGINT},
+      </if>
+    </set>
+    where storeId = #{storeid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.entity.ShopStore" >
+    update shopstore
+    set shop_Id = #{shopId,jdbcType=INTEGER},
+      productid = #{productid,jdbcType=VARCHAR},
+      storeNum = #{storenum,jdbcType=BIGINT},
+      sales = #{sales,jdbcType=BIGINT}
+    where storeId = #{storeid,jdbcType=INTEGER}
+  </update>
+</mapper>

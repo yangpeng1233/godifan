@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dao.IProductInfo" >
+  <resultMap id="BaseResultMap" type="com.entity.ProductInfo" >
+    <id column="pId" property="pid" jdbcType="INTEGER" />
+    <result column="productId" property="productid" jdbcType="VARCHAR" />
+    <result column="productName" property="productname" jdbcType="VARCHAR" />
+    <result column="productPrice" property="productprice" jdbcType="INTEGER" />
+    <result column="isCanBuy" property="iscanbuy" jdbcType="INTEGER" />
+    <result column="productNum" property="productnum" jdbcType="INTEGER" />
+    <result column="productTaste" property="producttaste" jdbcType="VARCHAR" />
+    <result column="seriesId" property="seriesid" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    pId, productId, productName, productPrice, isCanBuy, productNum, productTaste, seriesId
+  </sql>
+
+  <select id="selectAll" resultMap="BaseResultMap">
+  select
+  <include refid="Base_Column_List" />
+  from productInfo
+</select>
+
+  <select id="selectLike" resultMap="BaseResultMap" parameterType="java.util.Map">
+      select
+        *
+      from productInfo
+    <where>
+      <if test="sid !=null">
+        and seriesid = #{sid}
+      </if>
+      <if test="pname !=null">
+        AND productname like #{pname}
+      </if>
+      <if test="minprice !=null and maxprice !=null ">
+      and productPrice BETWEEN #{minprice} AND #{maxprice}
+     </if>
+      <if test="sbuy !=null">
+        and iscanbuy = #{sbuy}
+      </if>
+    </where>
+
+  </select>
+
+  <select id="selectPag" resultMap="BaseResultMap" parameterType="java.util.Map">
+    select * from productInfo
+    <where>
+      <if test="sid !=null">
+        and seriesid = #{sid}
+      </if>
+      <if test="pname !=null">
+        AND productname like #{pname}
+      </if>
+      <if test="minprice !=null and maxprice !=null ">
+        and productPrice BETWEEN #{minprice} AND #{maxprice}
+      </if>
+      <if test="sbuy !=null">
+        and iscanbuy = #{sbuy}
+      </if>
+    </where>
+    ORDER BY pId DESC LIMIT #{start},#{pagesize}
+  </select>
+
+  <select id="selectCount" resultType="java.lang.Integer" parameterType="java.util.Map">
+    select COUNT(p.pid)
+    FROM productinfo p
+    <where>
+      <if test="sid !=null">
+        and seriesid = #{sid}
+      </if>
+      <if test="pname !=null">
+        AND productname like #{pname}
+      </if>
+      <if test="minprice !=null and maxprice !=null ">
+        and productPrice BETWEEN #{minprice} AND #{maxprice}
+      </if>
+      <if test="sbuy !=null">
+        and iscanbuy = #{sbuy}
+      </if>
+    </where>
+  </select>
+
+  <select id="selectOne" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select
+    <include refid="Base_Column_List" />
+    from productInfo
+    where productId = #{productid,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from productInfo
+    where pId = #{pid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from productInfo
+    where pId = #{pid,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.entity.ProductInfo" useGeneratedKeys="true" keyProperty="pId">
+    insert into productInfo (pId, productId, productName, 
+      productPrice, isCanBuy, productNum, 
+      productTaste, seriesId)
+    values (#{pid,jdbcType=INTEGER}, #{productid,jdbcType=VARCHAR}, #{productname,jdbcType=VARCHAR}, 
+      #{productprice,jdbcType=INTEGER}, #{iscanbuy,jdbcType=INTEGER}, #{productnum,jdbcType=INTEGER}, 
+      #{producttaste,jdbcType=VARCHAR}, #{seriesid,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.entity.ProductInfo" >
+    insert into productInfo
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="pid != null" >
+        pId,
+      </if>
+      <if test="productid != null" >
+        productId,
+      </if>
+      <if test="productname != null" >
+        productName,
+      </if>
+      <if test="productprice != null" >
+        productPrice,
+      </if>
+      <if test="iscanbuy != null" >
+        isCanBuy,
+      </if>
+      <if test="productnum != null" >
+        productNum,
+      </if>
+      <if test="producttaste != null" >
+        productTaste,
+      </if>
+      <if test="seriesid != null" >
+        seriesId,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="pid != null" >
+        #{pid,jdbcType=INTEGER},
+      </if>
+      <if test="productid != null" >
+        #{productid,jdbcType=VARCHAR},
+      </if>
+      <if test="productname != null" >
+        #{productname,jdbcType=VARCHAR},
+      </if>
+      <if test="productprice != null" >
+        #{productprice,jdbcType=INTEGER},
+      </if>
+      <if test="iscanbuy != null" >
+        #{iscanbuy,jdbcType=INTEGER},
+      </if>
+      <if test="productnum != null" >
+        #{productnum,jdbcType=INTEGER},
+      </if>
+      <if test="producttaste != null" >
+        #{producttaste,jdbcType=VARCHAR},
+      </if>
+      <if test="seriesid != null" >
+        #{seriesid,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.entity.ProductInfo" >
+    update productInfo
+    <set >
+      <if test="productid != null" >
+        productId = #{productid,jdbcType=VARCHAR},
+      </if>
+      <if test="productname != null" >
+        productName = #{productname,jdbcType=VARCHAR},
+      </if>
+      <if test="productprice != null" >
+        productPrice = #{productprice,jdbcType=INTEGER},
+      </if>
+      <if test="iscanbuy != null" >
+        isCanBuy = #{iscanbuy,jdbcType=INTEGER},
+      </if>
+      <if test="productnum != null" >
+        productNum = #{productnum,jdbcType=INTEGER},
+      </if>
+      <if test="producttaste != null" >
+        productTaste = #{producttaste,jdbcType=VARCHAR},
+      </if>
+      <if test="seriesid != null" >
+        seriesId = #{seriesid,jdbcType=INTEGER},
+      </if>
+    </set>
+    where pId = #{pid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.entity.ProductInfo" >
+    update productInfo
+    set productId = #{productid,jdbcType=VARCHAR},
+      productName = #{productname,jdbcType=VARCHAR},
+      productPrice = #{productprice,jdbcType=INTEGER},
+      isCanBuy = #{iscanbuy,jdbcType=INTEGER},
+      productNum = #{productnum,jdbcType=INTEGER},
+      productTaste = #{producttaste,jdbcType=VARCHAR},
+      seriesId = #{seriesid,jdbcType=INTEGER}
+    where pId = #{pid,jdbcType=INTEGER}
+  </update>
+</mapper>
